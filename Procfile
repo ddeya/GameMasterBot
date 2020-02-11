@@ -1,1 +1,1 @@
-java -Dspring.profiles.active=dev -Dserver.port=$PORT $JAVA_OPTS -jar build/libs/*.jar
+web: java $JAVA_OPTS -jar build/libs/*.jar --spring.profiles.active=heroku --server.port=$PORT
