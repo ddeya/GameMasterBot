@@ -23,13 +23,14 @@ class BotController {
     fun onUpdate(@RequestBody update: Update) {
         logger.log(Level.INFO, "Got update: $update")
         if (update.message != null) {
-            val chatID = update.message!!.chat?.id
-            val text = update.message!!.text
+            val chatID = update.message.chat?.id
+            val text = update.message.text
             when {
                 text?.startsWith(ECHO_COMMAND) == true -> onEcho(chatID!!, text)
             }
         }
     }
+
     private fun onEcho(chatID: Int, text: String) {
         val textToSend = text.removePrefix(ECHO_COMMAND).trimStart()
         RestTemplate().postForObject<Any>("$API_ENDPOINT$TOKEN/sendMessage", BotMessage(chatID, textToSend))
