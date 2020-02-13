@@ -31,7 +31,7 @@ class BotController {
         }
     }
 
-    private fun onEcho(chatID: Int, text: String) {
+    private fun onEcho(chatID: Long, text: String) {
         val textToSend = text.removePrefix(ECHO_COMMAND).trimStart()
         RestTemplate().postForObject<Any>("$API_ENDPOINT$TOKEN/sendMessage", BotMessage(chatID, textToSend))
     }
