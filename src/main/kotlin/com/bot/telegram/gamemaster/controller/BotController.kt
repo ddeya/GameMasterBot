@@ -19,7 +19,7 @@ class BotController {
 
     val logger: Logger = Logger.getLogger("[GameMaster]")
 
-    @PostMapping("/$TOKEN")
+    @PostMapping("/update")
     fun onUpdate(@RequestBody update: Update) {
         logger.log(Level.INFO, "Got update: $update")
         if (update.message != null) {
