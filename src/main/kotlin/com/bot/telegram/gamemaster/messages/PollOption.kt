@@ -1,6 +1,9 @@
 package com.bot.telegram.gamemaster.messages
 
+import com.fasterxml.jackson.annotation.JsonProperty
+
 class PollOption(
         val text: String,
-        val voter_count: Int
+        @JsonProperty("voter_count")
+        val voterCount: Int
 )

@@ -1,7 +1,11 @@
 package com.bot.telegram.gamemaster.messages
 
+import com.fasterxml.jackson.annotation.JsonProperty
+
 class PollAnswer(
-        val poll_id: String,
+        @JsonProperty("poll_id")
+        val pollId: String,
         val user: User,
-        val option_ids: Array<Int>
+        @JsonProperty("option_ids")
+        val optionIds: Array<Int>
 )

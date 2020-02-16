@@ -1,8 +1,12 @@
 package com.bot.telegram.gamemaster.messages
 
+import com.fasterxml.jackson.annotation.JsonProperty
+
 class OrderInfo(
         val name: String?,
-        val phone_number: String?,
+        @JsonProperty("phone_number")
+        val phoneNumber: String?,
         val email: String?,
-        val shipping_address: ShippingAddress?
+        @JsonProperty("shipping_address")
+        val shippingAddress: ShippingAddress?
 )

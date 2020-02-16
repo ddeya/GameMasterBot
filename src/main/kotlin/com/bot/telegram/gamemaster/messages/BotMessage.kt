@@ -1,3 +1,9 @@
 package com.bot.telegram.gamemaster.messages
 
-class BotMessage(val chat_id: Long, val text: String?)
+import com.fasterxml.jackson.annotation.JsonProperty
+
+class BotMessage(
+        @JsonProperty("chat_id")
+        val chatId: Long,
+        val text: String?
+)

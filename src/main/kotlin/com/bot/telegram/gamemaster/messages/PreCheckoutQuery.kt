@@ -1,11 +1,17 @@
 package com.bot.telegram.gamemaster.messages
 
+import com.fasterxml.jackson.annotation.JsonProperty
+
 class PreCheckoutQuery(
         val id: String,
         val from: User,
         val currency: String,
-        val total_amount: Int,
-        val invoice_payload: String,
-        val shipping_option_id: String?,
-        val order_info: OrderInfo?
+        @JsonProperty("total_amount")
+        val totalAmount: Int,
+        @JsonProperty("invoice_payload")
+        val invoicePayload: String,
+        @JsonProperty("shipping_option_id")
+        val shippingOptionId: String?,
+        @JsonProperty("order_info")
+        val orderInfo: OrderInfo?
 )

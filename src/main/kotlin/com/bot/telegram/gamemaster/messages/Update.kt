@@ -1,20 +1,28 @@
 package com.bot.telegram.gamemaster.messages
 
+import com.fasterxml.jackson.annotation.JsonProperty
+
 
 data class Update(
         val updateId: Int,
         val message: Message?,
-        val edited_message: Message?,
-        val channel_post: Message?,
-        val edited_channel_post: Message?,
+        @JsonProperty("edited_message")
         val editedMessage: Message?,
+        @JsonProperty("channel_post")
         val channelPost: Message?,
+        @JsonProperty("edited_channel_post")
         val editedChannelPost: Message?,
-        val inline_query: InlineQuery?,
-        val chosen_inline_result: ChosenInlineResult,
-        val callback_query: CallbackQuery?,
-        val shipping_query: ShippingQuery?,
-        val pre_checkout_query: PreCheckoutQuery?,
+        @JsonProperty("inline_query")
+        val inlineQuery: InlineQuery?,
+        @JsonProperty("chosen_inline_result")
+        val chosenInlineResult: ChosenInlineResult,
+        @JsonProperty("callback_query")
+        val callbackQuery: CallbackQuery?,
+        @JsonProperty("shipping_query")
+        val shippingQuery: ShippingQuery?,
+        @JsonProperty("pre_checkout_query")
+        val preCheckoutQuery: PreCheckoutQuery?,
         val poll: Poll?,
-        val poll_answer: PollAnswer?
+        @JsonProperty("poll_answer")
+        val pollAnswer: PollAnswer?
 )
