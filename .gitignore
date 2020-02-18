@@ -18,6 +18,7 @@ build/
 *.iws
 *.iml
 *.ipr
+.idea/misc.xml
 out/
 
 ### NetBeans ###
