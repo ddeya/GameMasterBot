@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS country;
+
 CREATE TABLE country (
     id   INTEGER NOT NULL,
     name VARCHAR(128) NOT NULL,
