@@ -2,7 +2,7 @@ package com.bot.telegram.gamemaster.messages
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-class ShippingQuery(
+data class ShippingQuery(
         val id: String?,
         val from: User?,
         @JsonProperty("invoice_payload")

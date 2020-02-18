@@ -2,7 +2,7 @@ package com.bot.telegram.gamemaster.messages
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-class PreCheckoutQuery(
+data class PreCheckoutQuery(
         val id: String,
         val from: User,
         val currency: String,

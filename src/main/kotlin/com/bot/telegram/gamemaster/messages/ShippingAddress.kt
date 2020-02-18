@@ -2,7 +2,7 @@ package com.bot.telegram.gamemaster.messages
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-class ShippingAddress(
+data class ShippingAddress(
         @JsonProperty("country_code")
         val countryCode: String?,
         val state: String?,
