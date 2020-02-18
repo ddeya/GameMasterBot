@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Gradle Imported" enabled="true">
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-configuration-processor/2.2.4.RELEASE/26982f05ecbf96371e8a7175c814117c66d6cc4a/spring-boot-configuration-processor-2.2.4.RELEASE.jar" />
+        </processorPath>
+        <module name="gamemaster.main" />
+      </profile>
+    </annotationProcessing>
+  </component>
+</project>
