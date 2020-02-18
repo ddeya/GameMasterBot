@@ -15,7 +15,7 @@ data class Update(
         @JsonProperty("inline_query")
         val inlineQuery: InlineQuery?,
         @JsonProperty("chosen_inline_result")
-        val chosenInlineResult: ChosenInlineResult,
+        val chosenInlineResult: ChosenInlineResult?,
         @JsonProperty("callback_query")
         val callbackQuery: CallbackQuery?,
         @JsonProperty("shipping_query")
