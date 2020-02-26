@@ -21,6 +21,7 @@ build/
 out/
 .idea/libraries/
 .idea/modules.xml
+.idea/.name
 
 ### NetBeans ###
 /nbproject/private/
