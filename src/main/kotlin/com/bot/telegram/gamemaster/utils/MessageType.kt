@@ -1,10 +1,6 @@
 package com.bot.telegram.gamemaster.utils
 
-enum class MessageType {
-    SEND_MESSAGES {
-        fun apply(): String = "/sendMessages"
-    },
-    RESTRICT_CHAT_MEMBER {
-        fun apply(): String = "/restrictChatMember"
-    };
+object MessageType {
+    const val SEND_MESSAGES = "/sendMessage"
+    const val RESTRICT_CHAT_MEMBER = "/restrictChatMember"
 }

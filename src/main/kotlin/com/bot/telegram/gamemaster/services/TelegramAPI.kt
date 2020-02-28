@@ -2,12 +2,9 @@ package com.bot.telegram.gamemaster.services
 
 import com.bot.telegram.gamemaster.controllers.API_ENDPOINT
 import com.bot.telegram.gamemaster.controllers.TOKEN
-import com.bot.telegram.gamemaster.messages.BotMessage
-import com.bot.telegram.gamemaster.utils.MessageType
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.client.postForObject
-import java.awt.TrayIcon
 import java.util.logging.Level
 import java.util.logging.Logger
 
@@ -16,7 +13,7 @@ class TelegramAPI(val apiUrl: String = API_ENDPOINT, val authToken: String = TOK
     private val httpClient: RestTemplate = RestTemplate()
     val logger: Logger = Logger.getLogger("[TelegramAPI]")
 
-    fun sendMessage(message: Any, option: MessageType): Any = logRequest(message) { data ->
+    fun sendMessage(message: Any, option: String): Any = logRequest(message) { data ->
         httpClient.postForObject("$apiUrl$authToken$option", data)
     }
 }
