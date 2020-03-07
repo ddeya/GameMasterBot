@@ -1,1 +1,1 @@
-# GameMasterBot for Telegram
+# GameMasterBot
