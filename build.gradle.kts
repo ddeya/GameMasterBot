@@ -3,9 +3,9 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
 	id("org.springframework.boot") version "2.2.4.RELEASE"
 	id("io.spring.dependency-management") version "1.0.9.RELEASE"
-	kotlin("jvm") version "1.3.61"
-	kotlin("plugin.spring") version "1.3.61"
-	kotlin("plugin.jpa") version "1.3.61"
+	kotlin("jvm") version "1.3.70"
+	kotlin("plugin.spring") version "1.3.70"
+	kotlin("plugin.jpa") version "1.3.70"
 }
 
 group = "com.bot.telegram"
@@ -26,10 +26,8 @@ repositories {
 	mavenCentral()
 }
 
-extra["springCloudServicesVersion"] = "2.2.1.RELEASE"
-extra["springCloudVersion"] = "Hoxton.SR1"
-
 dependencies {
+	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.4")
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-quartz")
