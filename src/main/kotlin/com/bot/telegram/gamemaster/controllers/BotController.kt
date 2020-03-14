@@ -2,15 +2,10 @@ package com.bot.telegram.gamemaster.controllers
 
 import com.bot.telegram.gamemaster.core.Router
 import com.bot.telegram.gamemaster.messages.Update
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
-import java.util.logging.Level
-import java.util.logging.Logger
 import javax.annotation.PreDestroy
 import kotlin.coroutines.CoroutineContext
 
@@ -23,13 +18,10 @@ public const val ECHO_COMMAND = "/echo"
 class BotController(val router: Router<Update, Unit>) : CoroutineScope {
 
     override val coroutineContext: CoroutineContext
-        get() = Job()
-
-    private val logger: Logger = Logger.getLogger("[GameMaster]")
+        get() = Job() + Dispatchers.Default
 
     @PostMapping("/$TOKEN")
     fun onUpdate(@RequestBody update: Update) {
-        logger.log(Level.INFO, "Got update: $update")
         launch { router.route(update) }
     }
 
