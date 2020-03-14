@@ -15,7 +15,7 @@ const val TOKEN = "1084250149:AAFcGrGrmM5R3VZQkctvJ7fN4omriJP8YTw"
 
 @SpringBootApplication
 class GameMasterApplication(val applicationContext: ApplicationContext) : SpringCoroutineScope() {
-    @Bean
+    @Bean(destroyMethod = "close")
     fun router(): Router<Update, Unit> = oneWayRouter(applicationContext, start = true)
 
     @Bean
