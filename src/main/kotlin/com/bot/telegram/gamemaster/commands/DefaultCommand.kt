@@ -21,5 +21,5 @@ class DefaultCommand(private val telegramAPI: TelegramAPI) : Processor<Update, U
         }
     }
 
-    override fun priority(): Int = -Int.MAX_VALUE
+    override fun priority(): Int = Int.MAX_VALUE
 }
