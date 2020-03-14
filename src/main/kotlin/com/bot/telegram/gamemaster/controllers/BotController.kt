@@ -12,8 +12,6 @@ import kotlin.coroutines.CoroutineContext
 const val API_ENDPOINT = "https://api.telegram.org/bot"
 const val TOKEN = "1084250149:AAFcGrGrmM5R3VZQkctvJ7fN4omriJP8YTw"
 
-const val ECHO_COMMAND = "/echo"
-
 @RestController
 class BotController(val router: Router<Update, Unit>) : CoroutineScope {
 

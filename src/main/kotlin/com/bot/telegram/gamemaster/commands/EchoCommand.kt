@@ -1,14 +1,15 @@
-package com.bot.telegram.gamemaster.processors
+package com.bot.telegram.gamemaster.commands
 
-import com.bot.telegram.gamemaster.controllers.ECHO_COMMAND
 import com.bot.telegram.gamemaster.core.BotCommand
 import com.bot.telegram.gamemaster.core.Processor
 import com.bot.telegram.gamemaster.messages.BotMessage
 import com.bot.telegram.gamemaster.messages.Update
 import com.bot.telegram.gamemaster.services.TelegramAPI
 
+const val ECHO_COMMAND = "/echo"
+
 @BotCommand
-class EchoCommand(private val telegramAPI: TelegramAPI) : Processor<Update, Unit> {
+class EchoCommand(private val telegramAPI: TelegramAPI) : Processor<Update, Unit>() {
 
     override fun accept(obj: Update): Boolean = obj.message?.text?.startsWith(ECHO_COMMAND) == true
 
@@ -21,4 +22,6 @@ class EchoCommand(private val telegramAPI: TelegramAPI) : Processor<Update, Unit
             }
         }
     }
+
+    override fun priority(): Int = 1
 }

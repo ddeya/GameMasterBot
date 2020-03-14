@@ -8,10 +8,11 @@ import kotlinx.coroutines.channels.actor
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import org.springframework.context.ApplicationContext
+import java.util.*
 import java.util.logging.Logger
 
 class Router<T, W>(
-    private val processors: MutableList<Processor<T, W>>,
+    private val processors: PriorityQueue<Processor<T, W>>,
     var groupBy: ((T) -> Any)
 ) {
     private val channels: MutableMap<Any, SendChannel<T>> = mutableMapOf()
@@ -54,7 +55,7 @@ fun <T, W> CoroutineScope.router(
     groupBy: (T) -> Any = { Unit },
     start: Boolean = false
 ): Router<T, W> {
-    val processors = mutableListOf<Processor<T, W>>()
+    val processors = PriorityQueue<Processor<T, W>>()
     applicationContext.getBeansWithAnnotation(BotCommand::class.java).forEach {
         processors += it.value as Processor<T, W>
     }

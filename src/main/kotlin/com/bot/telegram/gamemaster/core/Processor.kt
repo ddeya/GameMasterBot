@@ -1,6 +1,9 @@
 package com.bot.telegram.gamemaster.core
 
-interface Processor<in T, out W> {
-    fun accept(obj: T): Boolean
-    fun process(obj: T): W
+abstract class Processor<T, W> : Comparable<Processor<T, W>> {
+    abstract fun accept(obj: T): Boolean
+    abstract fun process(obj: T): W
+    abstract fun priority(): Int
+
+    override fun compareTo(other: Processor<T, W>): Int = priority() - other.priority()
 }
