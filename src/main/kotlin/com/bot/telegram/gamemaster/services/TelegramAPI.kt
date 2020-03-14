@@ -14,14 +14,18 @@ class TelegramAPI(val apiUrl: String = API_ENDPOINT, val authToken: String = TOK
     private val httpClient: RestTemplate = RestTemplate()
     val logger: Logger = Logger.getLogger("[TelegramAPI]")
 
-    fun sendMessage(message: BotMessage): Any = logRequest(message) { data ->
-        httpClient.postForObject("$apiUrl$authToken/sendMessage", data)
+    fun sendMessage(message: BotMessage): Any? {
+        return if (!message.text.isNullOrBlank()) {
+            logRequest(message) { data ->
+                httpClient.postForObject("$apiUrl$authToken/sendMessage", data)
+            }
+        } else null
     }
-}
 
-private fun TelegramAPI.logRequest(data: Any? = null, request: (Any?) -> Any): Any {
-    logger.log(Level.INFO, "Sending Request: ${data ?: ""}")
-    val response = request(data)
-    logger.log(Level.INFO, "Request Response: $response")
-    return response
+    private fun TelegramAPI.logRequest(data: Any? = null, request: (Any?) -> Any): Any {
+        logger.log(Level.INFO, "Sending Request: ${data ?: ""}")
+        val response = request(data)
+        logger.log(Level.INFO, "Request Response: $response")
+        return response
+    }
 }
