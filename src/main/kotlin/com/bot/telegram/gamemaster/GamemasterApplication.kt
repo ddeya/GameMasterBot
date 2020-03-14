@@ -6,8 +6,6 @@ import com.bot.telegram.gamemaster.messages.Update
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.SendChannel
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.ApplicationContext
@@ -22,17 +20,7 @@ class GameMasterApplication(val applicationContext: ApplicationContext) : Corout
         get() = Job()
 
     @Bean
-    fun routerInput(): SendChannel<Update> = Channel(Channel.UNLIMITED)
-
-    @Bean
-    fun router(
-        inputChannel: SendChannel<Update>
-    ): Router<Update, Unit> =
-        router(
-            applicationContext,
-            inputChannel = inputChannel,
-            start = true
-        )
+    fun router(): Router<Update, Unit> = router(applicationContext, start = true)
 
     @PreDestroy
     fun cancelScope() {

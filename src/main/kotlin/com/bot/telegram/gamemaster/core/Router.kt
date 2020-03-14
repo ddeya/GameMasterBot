@@ -12,12 +12,11 @@ import java.util.logging.Logger
 
 class Router<T, W>(
     private val processors: MutableList<Processor<T, W>>,
-    var groupBy: ((T) -> Any),
-    private val inputChannel: ReceiveChannel<T>,
-    private val outputChannel: SendChannel<W>?
+    var groupBy: ((T) -> Any)
 ) {
     private val channels: MutableMap<Any, SendChannel<T>> = mutableMapOf()
-
+    private val inputChannel: Channel<T> = Channel(Channel.BUFFERED)
+    private val outputChannel: SendChannel<W> = Channel(Channel.BUFFERED)
 
     private val logger: Logger = Logger.getLogger("[Router]")
 
@@ -31,7 +30,7 @@ class Router<T, W>(
                     for (msg in channel) {
                         logger.info("Pipeline-$key received message $msg")
                         val result = processors.find { it.accept(msg) }?.process(msg)
-                        if (outputChannel != null && result != null) {
+                        if (result != null) {
                             outputChannel.send(result)
                         }
                     }
@@ -41,21 +40,25 @@ class Router<T, W>(
             channels[key]?.send(message);
         }
     }
+
+    suspend fun send(msg: T) {
+        inputChannel.send(msg)
+    }
+
+    fun getOutput(): ReceiveChannel<W> = outputChannel as Channel<W>
 }
 
 
 fun <T, W> CoroutineScope.router(
     applicationContext: ApplicationContext,
     groupBy: (T) -> Any = { Unit },
-    inputChannel: SendChannel<T>,
-    outputChannel: ReceiveChannel<W>? = null,
     start: Boolean = false
 ): Router<T, W> {
     val processors = mutableListOf<Processor<T, W>>()
     applicationContext.getBeansWithAnnotation(BotCommand::class.java).forEach {
         processors += it.value as Processor<T, W>
     }
-    return Router(processors, groupBy, inputChannel as Channel, outputChannel as Channel?).apply {
+    return Router(processors, groupBy).apply {
         if (start) {
             launch { start() }
         }
