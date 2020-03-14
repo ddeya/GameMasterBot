@@ -11,17 +11,23 @@ import org.springframework.context.ApplicationContext
 import java.util.*
 import java.util.logging.Logger
 
-class Router<T, W>(
+interface Router<T, W> {
+    suspend fun start()
+    suspend fun send(message: T)
+    fun getOutputChannel(): ReceiveChannel<W>?
+}
+
+open class TwoWayRouter<T, W>(
     private val processors: PriorityQueue<Processor<T, W>>,
-    var groupBy: ((T) -> Any)
-) {
+    open var groupBy: ((T) -> Any),
+    private val inputChannel: Channel<T> = Channel(Channel.BUFFERED),
+    private val outputChannel: SendChannel<W>? = Channel(Channel.BUFFERED)
+) : Router<T, W> {
     private val channels: MutableMap<Any, SendChannel<T>> = mutableMapOf()
-    private val inputChannel: Channel<T> = Channel(Channel.BUFFERED)
-    private val outputChannel: SendChannel<W> = Channel(Channel.BUFFERED)
 
     private val logger: Logger = Logger.getLogger("[Router]")
 
-    suspend fun start() = coroutineScope {
+    override suspend fun start() = coroutineScope {
         logger.info("Starting router")
         for (message in inputChannel) {
             val key = groupBy(message);
@@ -32,7 +38,7 @@ class Router<T, W>(
                         logger.info("Pipeline-$key received message $msg")
                         val result = processors.find { it.accept(msg) }?.process(msg)
                         if (result != null) {
-                            outputChannel.send(result)
+                            outputChannel?.send(result)
                         }
                     }
                 }
@@ -42,24 +48,45 @@ class Router<T, W>(
         }
     }
 
-    suspend fun send(msg: T) {
-        inputChannel.send(msg)
+    override suspend fun send(message: T) {
+        inputChannel.send(message)
     }
 
-    fun getOutput(): ReceiveChannel<W> = outputChannel as Channel<W>
+    override fun getOutputChannel(): ReceiveChannel<W> = outputChannel as Channel<W>
 }
 
+open class OneWayRouter<T>(
+    processors: PriorityQueue<Processor<T, Unit>>,
+    groupBy: ((T) -> Any),
+    inputChannel: Channel<T> = Channel(Channel.BUFFERED)
+) : TwoWayRouter<T, Unit>(processors, groupBy, inputChannel, outputChannel = null)
 
-fun <T, W> CoroutineScope.router(
+fun <T, W> CoroutineScope.twoWayRouter(
     applicationContext: ApplicationContext,
     groupBy: (T) -> Any = { Unit },
     start: Boolean = false
-): Router<T, W> {
+): TwoWayRouter<T, W> {
     val processors = PriorityQueue<Processor<T, W>>()
     applicationContext.getBeansWithAnnotation(BotCommand::class.java).forEach {
         processors += it.value as Processor<T, W>
     }
-    return Router(processors, groupBy).apply {
+    return TwoWayRouter(processors, groupBy).apply {
+        if (start) {
+            launch { start() }
+        }
+    }
+}
+
+fun <T> CoroutineScope.oneWayRouter(
+    applicationContext: ApplicationContext,
+    groupBy: (T) -> Any = { Unit },
+    start: Boolean = false
+): OneWayRouter<T> {
+    val processors = PriorityQueue<Processor<T, Unit>>()
+    applicationContext.getBeansWithAnnotation(BotCommand::class.java).forEach {
+        processors += it.value as Processor<T, Unit>
+    }
+    return OneWayRouter(processors, groupBy).apply {
         if (start) {
             launch { start() }
         }

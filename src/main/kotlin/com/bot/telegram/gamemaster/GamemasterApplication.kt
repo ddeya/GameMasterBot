@@ -2,7 +2,7 @@ package com.bot.telegram.gamemaster
 
 import com.bot.telegram.gamemaster.core.Router
 import com.bot.telegram.gamemaster.core.SpringCoroutineScope
-import com.bot.telegram.gamemaster.core.router
+import com.bot.telegram.gamemaster.core.oneWayRouter
 import com.bot.telegram.gamemaster.messages.Update
 import com.bot.telegram.gamemaster.services.TelegramAPI
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -16,7 +16,7 @@ const val TOKEN = "1084250149:AAFcGrGrmM5R3VZQkctvJ7fN4omriJP8YTw"
 @SpringBootApplication
 class GameMasterApplication(val applicationContext: ApplicationContext) : SpringCoroutineScope() {
     @Bean
-    fun router(): Router<Update, Unit> = router(applicationContext, start = true)
+    fun router(): Router<Update, Unit> = oneWayRouter(applicationContext, start = true)
 
     @Bean
     fun telegramApi(): TelegramAPI = TelegramAPI(API_ENDPOINT, TOKEN)
