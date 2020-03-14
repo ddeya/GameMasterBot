@@ -8,12 +8,18 @@ import com.bot.telegram.gamemaster.messages.BotMessage
 import com.bot.telegram.gamemaster.messages.Update
 import com.bot.telegram.gamemaster.services.TelegramAPI
 
-const val Kick_COMMAND = "/KICK"
+const val KICK_COMMAND = "/kick"
+const val CHAT_TYPE = "group"
 
 @BotCommand
 class KickCommand(private val telegramAPI: TelegramAPI) : Processor<Update, Unit>() {
 
-    override fun accept(obj: Update): Boolean = obj.message?.text?.startsWith(Kick_COMMAND) == true
+    override fun accept(obj: Update): Boolean {
+        if (obj.message != null) {
+            return obj.message.text?.startsWith(KICK_COMMAND) == true and (obj.message.chat.type == CHAT_TYPE) and (obj.message.forwardFrom?.id != obj.message.from?.id);
+        }
+        return false;
+    }
 
     override fun process(obj: Update) {
         if (obj.message != null) {
@@ -29,3 +35,6 @@ class KickCommand(private val telegramAPI: TelegramAPI) : Processor<Update, Unit
 
     override fun priority(): Int = 1
 }
+=======
+}
+>>>>>>> Kick command
