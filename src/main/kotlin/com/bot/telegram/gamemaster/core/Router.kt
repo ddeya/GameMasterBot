@@ -15,6 +15,7 @@ interface Router<T, W> {
     suspend fun start()
     suspend fun send(message: T)
     fun getOutputChannel(): ReceiveChannel<W>?
+    fun destroy(): Boolean
 }
 
 open class TwoWayRouter<T, W>(
@@ -30,7 +31,7 @@ open class TwoWayRouter<T, W>(
     override suspend fun start() = coroutineScope {
         logger.info("Starting router")
         for (message in inputChannel) {
-            val key = groupBy(message);
+            val key = groupBy(message)
             if (!channels.containsKey(key)) {
                 logger.info("Starting new Pipeline-$key")
                 channels[key] = actor {
@@ -44,13 +45,16 @@ open class TwoWayRouter<T, W>(
                 }
             }
             logger.info("Sending message to Pipeline-$key")
-            channels[key]?.send(message);
+            channels[key]?.send(message)
         }
+        channels.forEach { (_, v) -> v.close() }
     }
 
     override suspend fun send(message: T) {
         inputChannel.send(message)
     }
+
+    override fun destroy(): Boolean = inputChannel.close()
 
     override fun getOutputChannel(): ReceiveChannel<W> = outputChannel as Channel<W>
 }
