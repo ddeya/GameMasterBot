@@ -1,5 +1,6 @@
 package com.bot.telegram.gamemaster.services
 
+import com.bot.telegram.gamemaster.messages.BotDataResponse
 import com.bot.telegram.gamemaster.messages.BotMessage
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.client.postForObject
@@ -14,6 +15,14 @@ class TelegramAPI(private val apiUrl: String, private val authToken: String) {
         return if (!message.text.isNullOrBlank()) {
             logRequest(message) { data ->
                 httpClient.postForObject("$apiUrl$authToken/sendMessage", data)
+            }
+        } else null
+    }
+
+    fun kickChatMember(message: BotDataResponse): Any? {
+        return if (message.userId != null) {
+            logRequest(message) { data ->
+                httpClient.postForObject("$apiUrl$authToken/kickChatMember", data)
             }
         } else null
     }
