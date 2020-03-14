@@ -1,16 +1,12 @@
 package com.bot.telegram.gamemaster.services
 
-import com.bot.telegram.gamemaster.controllers.API_ENDPOINT
-import com.bot.telegram.gamemaster.controllers.TOKEN
 import com.bot.telegram.gamemaster.messages.BotMessage
-import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.client.postForObject
 import java.util.logging.Level
 import java.util.logging.Logger
 
-@Service
-class TelegramAPI(val apiUrl: String = API_ENDPOINT, val authToken: String = TOKEN) {
+class TelegramAPI(private val apiUrl: String, private val authToken: String) {
     private val httpClient: RestTemplate = RestTemplate()
     val logger: Logger = Logger.getLogger("[TelegramAPI]")
 
