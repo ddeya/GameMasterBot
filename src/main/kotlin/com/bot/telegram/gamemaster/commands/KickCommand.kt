@@ -16,7 +16,7 @@ class KickCommand(private val telegramAPI: ITelegramAPI) : Processor<Update, Str
 
     override fun accept(obj: Update): Boolean {
         if (obj.message != null) {
-            return obj.message.text?.startsWith(KICK_COMMAND) == true && (obj.message.chat.type == CHAT_TYPE) && (obj.message.forwardFrom?.id != obj.message.from?.id);
+            return obj.message.text?.startsWith(KICK_COMMAND) == true && (obj.message.chat.type == CHAT_TYPE) && (obj.message.replyToMessage?.from?.id != obj.message.from?.id);
         }
         return false;
     }
@@ -24,10 +24,10 @@ class KickCommand(private val telegramAPI: ITelegramAPI) : Processor<Update, Str
     override fun process(obj: Update): String {
         if (obj.message != null) {
             val msg = obj.message;
-            if (msg.forwardFrom != null) {
+            if (msg.replyToMessage?.from != null) {
                 //If its will be a return message
-                val textToSend = "User ${msg.forwardFrom.firstName} kicked"
-                telegramAPI.kickChatMember(BotDataResponse(msg.chat.id, msg.forwardFrom.id));
+                val textToSend = "User ${msg.replyToMessage.from.firstName} kicked"
+                telegramAPI.kickChatMember(BotDataResponse(msg.chat.id, msg.replyToMessage.from.id));
                 telegramAPI.sendMessage(BotMessage(msg.chat.id, textToSend))
                 return textToSend
             }
