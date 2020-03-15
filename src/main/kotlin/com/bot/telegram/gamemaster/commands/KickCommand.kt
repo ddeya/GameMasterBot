@@ -35,6 +35,3 @@ class KickCommand(private val telegramAPI: TelegramAPI) : Processor<Update, Unit
 
     override fun priority(): Int = 1
 }
-=======
-}
->>>>>>> Kick command
