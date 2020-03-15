@@ -26,12 +26,13 @@ class KickCommand(private val telegramAPI: ITelegramAPI) : Processor<Update, Str
             val msg = obj.message;
             if (msg.forwardFrom != null) {
                 //If its will be a return message
-                val textToSend = "User " + msg.forwardFrom.firstName + " kicked";
+                val textToSend = "User ${msg.forwardFrom.firstName} kicked"
                 telegramAPI.kickChatMember(BotDataResponse(msg.chat.id, msg.forwardFrom.id));
-                telegramAPI.sendMessage(BotMessage(msg.chat.id, textToSend));
+                telegramAPI.sendMessage(BotMessage(msg.chat.id, textToSend))
+                return textToSend
             }
         }
-        return "User Kicked"
+        return "No message"
     }
 
     override fun priority(): Int = 1

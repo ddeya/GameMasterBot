@@ -21,12 +21,22 @@ class GamemasterApplicationTests {
 
     @Test
     fun testKickCommand() = runBlocking {
+        val userA = User(id = 1, username = "A")
+        val userB = User(id = 2, username = "B")
         val msj = Update(
             updateId = 0,
             message = Message(
                 messageId = 0,
-                from = User(id = 1),
-                forwardFrom = User(id = 99),
+                from = userA,
+                replyToMessage = Message(
+                    messageId = 1,
+                    from = userB,
+                    chat = Chat(
+                        id = 0,
+                        bot = false,
+                        type = "group"
+                    )
+                ),
                 chat = Chat(
                     id = 0,
                     bot = false,
@@ -36,7 +46,6 @@ class GamemasterApplicationTests {
             )
         )
         router.send(msj)
-        Assertions.assertEquals("User Kicked", router.getOutputChannel()?.receive())
+        Assertions.assertEquals("User ${userB.firstName} kicked", router.getOutputChannel()?.receive())
     }
-
 }
