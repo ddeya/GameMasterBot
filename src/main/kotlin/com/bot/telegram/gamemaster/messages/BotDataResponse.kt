@@ -6,7 +6,7 @@ data class BotDataResponse(
         @JsonProperty("chat_id")
         val chatId: Long,
         @JsonProperty("user_id")
-        val userId: Int
-//        @JsonProperty("until_date")
-//        val untilDate: Int?
+        val userId: Int,
+        @JsonProperty("until_date")
+        val untilDate: Int? = null
 )

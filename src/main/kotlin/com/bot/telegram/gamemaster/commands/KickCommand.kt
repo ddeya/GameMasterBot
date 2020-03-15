@@ -16,7 +16,7 @@ class KickCommand(private val telegramAPI: TelegramAPI) : Processor<Update, Unit
 
     override fun accept(obj: Update): Boolean {
         if (obj.message != null) {
-            return obj.message.text?.startsWith(KICK_COMMAND) == true and (obj.message.chat.type == CHAT_TYPE) and (obj.message.forwardFrom?.id != obj.message.from?.id);
+            return obj.message.text?.startsWith(KICK_COMMAND) == true && (obj.message.chat.type == CHAT_TYPE) && (obj.message.forwardFrom?.id != obj.message.from?.id);
         }
         return false;
     }
