@@ -7,11 +7,11 @@ import org.springframework.web.client.postForObject
 import java.util.logging.Level
 import java.util.logging.Logger
 
-class TelegramAPI(private val apiUrl: String, private val authToken: String) {
+class TelegramAPI(private val apiUrl: String, private val authToken: String) : ITelegramAPI {
     private val httpClient: RestTemplate = RestTemplate()
     val logger: Logger = Logger.getLogger("[TelegramAPI]")
 
-    fun sendMessage(message: BotMessage): Any? {
+    override fun sendMessage(message: BotMessage): Any? {
         return if (!message.text.isNullOrBlank()) {
             logRequest(message) { data ->
                 httpClient.postForObject("$apiUrl$authToken/sendMessage", data)
@@ -19,7 +19,7 @@ class TelegramAPI(private val apiUrl: String, private val authToken: String) {
         } else null
     }
 
-    fun kickChatMember(message: BotDataResponse): Any? {
+    override fun kickChatMember(message: BotDataResponse): Any? {
         return if (message.userId != null) {
             logRequest(message) { data ->
                 httpClient.postForObject("$apiUrl$authToken/kickChatMember", data)

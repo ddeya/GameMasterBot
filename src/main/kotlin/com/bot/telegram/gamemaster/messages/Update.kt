@@ -4,25 +4,25 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 
 data class Update(
-        val updateId: Int,
-        val message: Message?,
-        @JsonProperty("edited_message")
-        val editedMessage: Message?,
-        @JsonProperty("channel_post")
-        val channelPost: Message?,
-        @JsonProperty("edited_channel_post")
-        val editedChannelPost: Message?,
-        @JsonProperty("inline_query")
-        val inlineQuery: InlineQuery?,
-        @JsonProperty("chosen_inline_result")
-        val chosenInlineResult: ChosenInlineResult?,
-        @JsonProperty("callback_query")
-        val callbackQuery: CallbackQuery?,
-        @JsonProperty("shipping_query")
-        val shippingQuery: ShippingQuery?,
-        @JsonProperty("pre_checkout_query")
-        val preCheckoutQuery: PreCheckoutQuery?,
-        val poll: Poll?,
-        @JsonProperty("poll_answer")
-        val pollAnswer: PollAnswer?
+    val updateId: Int,
+    val message: Message? = null,
+    @JsonProperty("edited_message")
+    val editedMessage: Message? = null,
+    @JsonProperty("channel_post")
+    val channelPost: Message? = null,
+    @JsonProperty("edited_channel_post")
+    val editedChannelPost: Message? = null,
+    @JsonProperty("inline_query")
+    val inlineQuery: InlineQuery? = null,
+    @JsonProperty("chosen_inline_result")
+    val chosenInlineResult: ChosenInlineResult? = null,
+    @JsonProperty("callback_query")
+    val callbackQuery: CallbackQuery? = null,
+    @JsonProperty("shipping_query")
+    val shippingQuery: ShippingQuery? = null,
+    @JsonProperty("pre_checkout_query")
+    val preCheckoutQuery: PreCheckoutQuery? = null,
+    val poll: Poll? = null,
+    @JsonProperty("poll_answer")
+    val pollAnswer: PollAnswer? = null
 )

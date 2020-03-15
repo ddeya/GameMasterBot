@@ -36,7 +36,12 @@ open class TwoWayRouter<T, W>(
                 channels[key] = actor {
                     for (msg in channel) {
                         logger.info("Pipeline-$key received message $msg")
-                        val result = processors.find { it.accept(msg) }?.process(msg)
+                        val result = processors.find {
+                            it.accept(msg)
+                        }?.run {
+                            logger.info("Pipeline-$key processing message $msg using ${this.javaClass.name}")
+                            process(msg)
+                        }
                         if (result != null) {
                             outputChannel?.send(result)
                         }

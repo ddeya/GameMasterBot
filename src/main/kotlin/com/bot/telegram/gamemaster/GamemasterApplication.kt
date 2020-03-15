@@ -4,6 +4,7 @@ import com.bot.telegram.gamemaster.core.Router
 import com.bot.telegram.gamemaster.core.SpringCoroutineScope
 import com.bot.telegram.gamemaster.core.oneWayRouter
 import com.bot.telegram.gamemaster.messages.Update
+import com.bot.telegram.gamemaster.services.ITelegramAPI
 import com.bot.telegram.gamemaster.services.TelegramAPI
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
@@ -19,7 +20,7 @@ class GameMasterApplication(val applicationContext: ApplicationContext) : Spring
     fun router(): Router<Update, Unit> = oneWayRouter(applicationContext, start = true)
 
     @Bean
-    fun telegramApi(): TelegramAPI = TelegramAPI(API_ENDPOINT, TOKEN)
+    fun telegramApi(): ITelegramAPI = TelegramAPI(API_ENDPOINT, TOKEN)
 }
 
 fun main(args: Array<String>) {

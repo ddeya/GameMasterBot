@@ -4,12 +4,12 @@ import com.bot.telegram.gamemaster.core.BotCommand
 import com.bot.telegram.gamemaster.core.Processor
 import com.bot.telegram.gamemaster.messages.BotMessage
 import com.bot.telegram.gamemaster.messages.Update
-import com.bot.telegram.gamemaster.services.TelegramAPI
+import com.bot.telegram.gamemaster.services.ITelegramAPI
 
 const val ECHO_COMMAND = "/echo"
 
 @BotCommand
-class EchoCommand(private val telegramAPI: TelegramAPI) : Processor<Update, Unit>() {
+class EchoCommand(private val telegramAPI: ITelegramAPI) : Processor<Update, Unit>() {
 
     override fun accept(obj: Update): Boolean = obj.message?.text?.startsWith(ECHO_COMMAND) == true
 

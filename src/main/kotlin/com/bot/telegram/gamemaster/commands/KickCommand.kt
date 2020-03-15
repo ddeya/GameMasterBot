@@ -6,13 +6,13 @@ import com.bot.telegram.gamemaster.core.Processor
 import com.bot.telegram.gamemaster.messages.BotDataResponse
 import com.bot.telegram.gamemaster.messages.BotMessage
 import com.bot.telegram.gamemaster.messages.Update
-import com.bot.telegram.gamemaster.services.TelegramAPI
+import com.bot.telegram.gamemaster.services.ITelegramAPI
 
 const val KICK_COMMAND = "/kick"
 const val CHAT_TYPE = "group"
 
 @BotCommand
-class KickCommand(private val telegramAPI: TelegramAPI) : Processor<Update, Unit>() {
+class KickCommand(private val telegramAPI: ITelegramAPI) : Processor<Update, String>() {
 
     override fun accept(obj: Update): Boolean {
         if (obj.message != null) {
@@ -21,7 +21,7 @@ class KickCommand(private val telegramAPI: TelegramAPI) : Processor<Update, Unit
         return false;
     }
 
-    override fun process(obj: Update) {
+    override fun process(obj: Update): String {
         if (obj.message != null) {
             val msg = obj.message;
             if (msg.forwardFrom != null) {
@@ -31,6 +31,7 @@ class KickCommand(private val telegramAPI: TelegramAPI) : Processor<Update, Unit
                 telegramAPI.sendMessage(BotMessage(msg.chat.id, textToSend));
             }
         }
+        return "User Kicked"
     }
 
     override fun priority(): Int = 1

@@ -4,77 +4,77 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.*
 
 data class Message(
-        @JsonProperty("message_id")
-        val messageId: Int,
-        val from: User?,
-        val date: Date?,
-        val chat: Chat,
-        @JsonProperty("forward_from")
-        val forwardFrom: User?,
-        @JsonProperty("forward_from_chat")
-        val forwardFromChat: Chat,
-        @JsonProperty("forward_from_message_id")
-        val forwardfromMessageId: Int,
-        @JsonProperty("forward_signature")
-        val forwardSignature: String,
-        @JsonProperty("forward_sender_name")
-        val forwardSenderName: String,
-        @JsonProperty("forward_date")
-        val forwardDate: Date?,
-        @JsonProperty("reply_to_message")
-        val replyToMessage: Message?,
-        @JsonProperty("edit_date")
-        val editDate: Date?,
-        @JsonProperty("media_group_id")
-        val mediaGroupId: String?,
-        @JsonProperty("author_signature")
-        val authorSignature: String?,
-        val text: String?,
-        val entities: Array<MessageEntity>?,
-        @JsonProperty("caption_entities")
-        val captionEntities: Array<MessageEntity>?,
-        val audio: Audio?,
-        val document: Document?,
-        val animation: Animation?,
-        val game: Game?,
-        val photo: Array<PhotoSize>?,
-        val sticker: Sticker?,
-        val video: Video?,
-        val voice: Voice?,
-        @JsonProperty("video_note")
-        val videoNote: VideoNote?,
-        val caption: String?,
-        val contact: Contact?,
-        val location: Location?,
-        val venue: Venue?,
-        //poll:	Poll?,
-        @JsonProperty("new_chat_members")
-        val new_chat_members: Array<User>?,
-        @JsonProperty("left_chat_member")
-        val leftChatMember: User?,
-        @JsonProperty("new_chat_title")
-        val newChatTitle: String?,
-        @JsonProperty("new_chat_photo")
-        val newChatPhoto: Array<PhotoSize>?,
-        @JsonProperty("delete_chat_photo")
-        val deleteChatPhoto: Boolean?,
-        @JsonProperty("group_chat_created")
-        val groupChatCreated: Boolean?,
-        @JsonProperty("supergroup_chat_created")
-        val supergroupChatCreated: Boolean?,
-        @JsonProperty("channel_chat_created")
-        val channelChatCreated: Boolean?,
-        @JsonProperty("migrate_to_chat_id")
-        val migrateToChatId: Int?,
-        @JsonProperty("migrate_from_chat_id")
-        val migrateFromChatId: Int?,
-        @JsonProperty("pinned_message")
-        val pinnedMessage: Message?,
+    @JsonProperty("message_id")
+    val messageId: Int,
+    val from: User? = null,
+    val date: Date? = null,
+    val chat: Chat,
+    @JsonProperty("forward_from")
+    val forwardFrom: User? = null,
+    @JsonProperty("forward_from_chat")
+    val forwardFromChat: Chat? = null,
+    @JsonProperty("forward_from_message_id")
+    val forwardfromMessageId: Int? = null,
+    @JsonProperty("forward_signature")
+    val forwardSignature: String? = null,
+    @JsonProperty("forward_sender_name")
+    val forwardSenderName: String? = null,
+    @JsonProperty("forward_date")
+    val forwardDate: Date? = null,
+    @JsonProperty("reply_to_message")
+    val replyToMessage: Message? = null,
+    @JsonProperty("edit_date")
+    val editDate: Date? = null,
+    @JsonProperty("media_group_id")
+    val mediaGroupId: String? = null,
+    @JsonProperty("author_signature")
+    val authorSignature: String? = null,
+    val text: String? = null,
+    val entities: Array<MessageEntity>? = null,
+    @JsonProperty("caption_entities")
+    val captionEntities: Array<MessageEntity>? = null,
+    val audio: Audio? = null,
+    val document: Document? = null,
+    val animation: Animation? = null,
+    val game: Game? = null,
+    val photo: Array<PhotoSize>? = null,
+    val sticker: Sticker? = null,
+    val video: Video? = null,
+    val voice: Voice? = null,
+    @JsonProperty("video_note")
+    val videoNote: VideoNote? = null,
+    val caption: String? = null,
+    val contact: Contact? = null,
+    val location: Location? = null,
+    val venue: Venue? = null,
+    //poll:	Poll?,
+    @JsonProperty("new_chat_members")
+    val new_chat_members: Array<User>? = null,
+    @JsonProperty("left_chat_member")
+    val leftChatMember: User? = null,
+    @JsonProperty("new_chat_title")
+    val newChatTitle: String? = null,
+    @JsonProperty("new_chat_photo")
+    val newChatPhoto: Array<PhotoSize>? = null,
+    @JsonProperty("delete_chat_photo")
+    val deleteChatPhoto: Boolean? = null,
+    @JsonProperty("group_chat_created")
+    val groupChatCreated: Boolean? = null,
+    @JsonProperty("supergroup_chat_created")
+    val supergroupChatCreated: Boolean? = null,
+    @JsonProperty("channel_chat_created")
+    val channelChatCreated: Boolean? = null,
+    @JsonProperty("migrate_to_chat_id")
+    val migrateToChatId: Int? = null,
+    @JsonProperty("migrate_from_chat_id")
+    val migrateFromChatId: Int? = null,
+    @JsonProperty("pinned_message")
+    val pinnedMessage: Message? = null,
 //        val invoice	:Invoice?,
 //        @JsonProperty("successful_payment")
 //        val successful_payment: SuccessfulPayment?,
-        @JsonProperty("connected_website")
-        val connectedWebsite: String?
+    @JsonProperty("connected_website")
+    val connectedWebsite: String? = null
 //        @JsonProperty("passport_data")
 //        val passport_data: PassportData?,
 //        @JsonProperty("reply_markup")
@@ -155,7 +155,7 @@ data class Message(
         result = 31 * result + chat.hashCode()
         result = 31 * result + (forwardFrom?.hashCode() ?: 0)
         result = 31 * result + forwardFromChat.hashCode()
-        result = 31 * result + forwardfromMessageId
+        result = 31 * result + (forwardfromMessageId?.hashCode() ?: 0)
         result = 31 * result + forwardSignature.hashCode()
         result = 31 * result + forwardSenderName.hashCode()
         result = 31 * result + (forwardDate?.hashCode() ?: 0)
