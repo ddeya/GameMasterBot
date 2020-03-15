@@ -8,7 +8,6 @@ import kotlinx.coroutines.channels.actor
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import org.springframework.context.ApplicationContext
-import java.util.*
 import java.util.logging.Logger
 
 interface Router<T, W> {
@@ -19,7 +18,7 @@ interface Router<T, W> {
 }
 
 open class TwoWayRouter<T, W>(
-    private val processors: PriorityQueue<Processor<T, W>>,
+    private val processors: Collection<Processor<T, W>>,
     open var groupBy: ((T) -> Any),
     private val inputChannel: Channel<T> = Channel(Channel.BUFFERED),
     private val outputChannel: SendChannel<W>? = Channel(Channel.BUFFERED)
@@ -60,7 +59,7 @@ open class TwoWayRouter<T, W>(
 }
 
 open class OneWayRouter<T>(
-    processors: PriorityQueue<Processor<T, Unit>>,
+    processors: Collection<Processor<T, Unit>>,
     groupBy: ((T) -> Any),
     inputChannel: Channel<T> = Channel(Channel.BUFFERED)
 ) : TwoWayRouter<T, Unit>(processors, groupBy, inputChannel, outputChannel = null)
@@ -70,10 +69,7 @@ fun <T, W> CoroutineScope.twoWayRouter(
     groupBy: (T) -> Any = { Unit },
     start: Boolean = false
 ): TwoWayRouter<T, W> {
-    val processors = PriorityQueue<Processor<T, W>>()
-    applicationContext.getBeansWithAnnotation(BotCommand::class.java).forEach {
-        processors += it.value as Processor<T, W>
-    }
+    val processors: Collection<Processor<T, W>> = getProcessorsFromContext(applicationContext)
     return TwoWayRouter(processors, groupBy).apply {
         if (start) {
             launch { start() }
@@ -86,13 +82,19 @@ fun <T> CoroutineScope.oneWayRouter(
     groupBy: (T) -> Any = { Unit },
     start: Boolean = false
 ): OneWayRouter<T> {
-    val processors = PriorityQueue<Processor<T, Unit>>()
-    applicationContext.getBeansWithAnnotation(BotCommand::class.java).forEach {
-        processors += it.value as Processor<T, Unit>
-    }
+    val processors: Collection<Processor<T, Unit>> = getProcessorsFromContext(applicationContext)
     return OneWayRouter(processors, groupBy).apply {
         if (start) {
             launch { start() }
         }
     }
+}
+
+internal fun <T, W> getProcessorsFromContext(applicationContext: ApplicationContext): Collection<Processor<T, W>> {
+    val processors = mutableListOf<Processor<T, W>>()
+    applicationContext.getBeansWithAnnotation(BotCommand::class.java).forEach {
+        processors += it.value as Processor<T, W>
+    }
+    processors.sortBy { it.priority() }
+    return processors
 }
