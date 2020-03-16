@@ -6,17 +6,20 @@ import com.bot.telegram.gamemaster.core.Processor
 import com.bot.telegram.gamemaster.messages.BotDataResponse
 import com.bot.telegram.gamemaster.messages.BotMessage
 import com.bot.telegram.gamemaster.messages.Update
+import com.bot.telegram.gamemaster.services.CHATTYPE
 import com.bot.telegram.gamemaster.services.ITelegramAPI
 
 const val KICK_COMMAND = "/kick"
-const val CHAT_TYPE = "group"
+val compatibleTypes = arrayOf(CHATTYPE.GROUP, CHATTYPE.SUPERGROUP)
 
 @BotCommand
 class KickCommand(private val telegramAPI: ITelegramAPI) : Processor<Update, String>() {
 
     override fun accept(obj: Update): Boolean {
         if (obj.message != null) {
-            return obj.message.text?.startsWith(KICK_COMMAND) == true && (obj.message.chat.type == CHAT_TYPE) && (obj.message.replyToMessage?.from?.id != obj.message.from?.id);
+            return obj.message.text?.startsWith(KICK_COMMAND) == true
+                    && (obj.message.replyToMessage?.from?.id != obj.message.from?.id
+                    && compatibleTypes.any { types -> obj.message.chat.type == types.value })
         }
         return false;
     }
@@ -25,7 +28,6 @@ class KickCommand(private val telegramAPI: ITelegramAPI) : Processor<Update, Str
         if (obj.message != null) {
             val msg = obj.message;
             if (msg.replyToMessage?.from != null) {
-                //If its will be a return message
                 val textToSend = "User ${msg.replyToMessage.from.firstName} kicked"
                 telegramAPI.kickChatMember(BotDataResponse(msg.chat.id, msg.replyToMessage.from.id));
                 telegramAPI.sendMessage(BotMessage(msg.chat.id, textToSend))
