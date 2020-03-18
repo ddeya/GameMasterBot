@@ -27,11 +27,9 @@ class TelegramAPI(private val apiUrl: String, private val authToken: String) : I
     }
 
     override fun kickChatMember(message: BotDataResponse): Any? {
-        return if (message.userId != null) {
-            logRequest(message) { data ->
-                httpClient.postForObject("$apiUrl$authToken/kickChatMember", data)
-            }
-        } else null
+        return logRequest(message) { data ->
+            httpClient.postForObject("$apiUrl$authToken/kickChatMember", data)
+        }
     }
 
     private fun TelegramAPI.logRequest(data: Any? = null, request: (Any?) -> Any): Any {
