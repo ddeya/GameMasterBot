@@ -19,7 +19,10 @@ class KickCommand(private val telegramAPI: ITelegramAPI) : Processor<Update, Str
         if (obj.message != null) {
             return obj.message.text?.startsWith(KICK_COMMAND) == true
                     && (obj.message.replyToMessage?.from?.id != obj.message.from?.id
-                    && compatibleTypes.any { types -> obj.message.chat.type == types.value })
+                    && obj.message.replyToMessage?.from?.id != telegramAPI.getMe()?.id
+                    && compatibleTypes.any { types -> obj.message.chat.type == types.value }
+                    && obj.message.replyToMessage?.from?.id != obj.message.from?.id
+                    )
         }
         return false;
     }
