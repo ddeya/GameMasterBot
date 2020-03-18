@@ -29,10 +29,10 @@ class KickCommand(private val telegramAPI: ITelegramAPI) : Processor<Update, Str
     override fun process(obj: Update): String {
         if (obj.message != null) {
             val msg = obj.message;
-            var textToSend = "";
+            val textToSend: String
             if (msg.replyToMessage?.from != null) {
                 if (msg.replyToMessage.from.id == telegramAPI.botId.id) {
-                    textToSend = "User ${msg.replyToMessage.from.firstName} nice try"
+                    textToSend = "User @${msg.from?.username}, nice try"
                     telegramAPI.sendMessage(BotMessage(msg.chat.id, textToSend))
                 } else {
                     textToSend = "User ${msg.replyToMessage.from.firstName} kicked"

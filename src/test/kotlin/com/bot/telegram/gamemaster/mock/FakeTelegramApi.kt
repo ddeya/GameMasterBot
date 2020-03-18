@@ -2,11 +2,9 @@ package com.bot.telegram.gamemaster.mock
 
 import com.bot.telegram.gamemaster.messages.BotDataResponse
 import com.bot.telegram.gamemaster.messages.BotMessage
-import com.bot.telegram.gamemaster.messages.User
-import com.bot.telegram.gamemaster.services.ITelegramAPI
+import com.bot.telegram.gamemaster.services.TelegramAPI
 
-abstract class FakeTelegramApi : ITelegramAPI {
-    abstract override val botId: User;
+class FakeTelegramApi(apiUrl: String, authToken: String) : TelegramAPI(apiUrl, authToken) {
     override fun sendMessage(message: BotMessage): Any? {
         return message
     }
