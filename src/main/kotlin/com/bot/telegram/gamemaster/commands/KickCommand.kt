@@ -18,10 +18,8 @@ class KickCommand(private val telegramAPI: ITelegramAPI) : Processor<Update, Str
     override fun accept(obj: Update): Boolean {
         if (obj.message != null) {
             return obj.message.text?.startsWith(KICK_COMMAND) == true
-                    && (obj.message.replyToMessage?.from?.id != obj.message.from?.id
-                    && compatibleTypes.any { types -> obj.message.chat.type == types.value }
                     && obj.message.replyToMessage?.from?.id != obj.message.from?.id
-                    )
+                    && compatibleTypes.any { types -> obj.message.chat.type == types.value }
         }
         return false;
     }
@@ -42,7 +40,7 @@ class KickCommand(private val telegramAPI: ITelegramAPI) : Processor<Update, Str
                 return textToSend
             }
         }
-        return "No message"
+        return ""
     }
 
     override fun priority(): Int = 1

@@ -1,6 +1,6 @@
 package com.bot.telegram.gamemaster.core
 
-abstract class Processor<T, W> : Comparable<Processor<T, W>> {
+abstract class Processor<T : Any, W : Any> : Comparable<Processor<T, W>> {
     abstract fun accept(obj: T): Boolean
     abstract fun process(obj: T): W
     abstract fun priority(): Int

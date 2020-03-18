@@ -85,6 +85,26 @@ class GamemasterApplicationTests {
     }
 
     @Test
+    fun `Kick Without Reply`(): Unit = runBlocking {
+        val userA = User(id = 1, username = "A")
+        val msg = Update(
+            updateId = 0,
+            message = Message(
+                messageId = 0,
+                from = userA,
+                chat = Chat(
+                    id = 0,
+                    bot = false,
+                    type = CHATTYPE.GROUP.value
+                ),
+                text = "/kick"
+            )
+        )
+        router.send(msg)
+        Assertions.assertTrue((router.getOutputChannel()?.receive() as String).isEmpty())
+    }
+
+    @Test
     fun `Unable to Kick Own Bot`(): Unit = runBlocking {
         val userA = User(id = 1, username = "A")
         val userB = telegramAPI.botId

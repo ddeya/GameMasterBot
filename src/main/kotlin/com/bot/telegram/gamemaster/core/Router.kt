@@ -17,7 +17,7 @@ interface Router<T, W> {
     fun destroy(): Boolean
 }
 
-open class TwoWayRouter<T, W>(
+open class TwoWayRouter<T : Any, W : Any>(
     private val processors: Collection<Processor<T, W>>,
     open var groupBy: ((T) -> Any),
     private val inputChannel: Channel<T> = Channel(Channel.BUFFERED),
@@ -63,13 +63,13 @@ open class TwoWayRouter<T, W>(
     override fun getOutputChannel(): ReceiveChannel<W> = outputChannel as Channel<W>
 }
 
-open class OneWayRouter<T>(
+open class OneWayRouter<T : Any>(
     processors: Collection<Processor<T, Unit>>,
     groupBy: ((T) -> Any),
     inputChannel: Channel<T> = Channel(Channel.BUFFERED)
 ) : TwoWayRouter<T, Unit>(processors, groupBy, inputChannel, outputChannel = null)
 
-fun <T, W> CoroutineScope.twoWayRouter(
+fun <T : Any, W : Any> CoroutineScope.twoWayRouter(
     applicationContext: ApplicationContext,
     groupBy: (T) -> Any = { Unit },
     start: Boolean = false
@@ -82,7 +82,7 @@ fun <T, W> CoroutineScope.twoWayRouter(
     }
 }
 
-fun <T> CoroutineScope.oneWayRouter(
+fun <T : Any> CoroutineScope.oneWayRouter(
     applicationContext: ApplicationContext,
     groupBy: (T) -> Any = { Unit },
     start: Boolean = false
@@ -95,7 +95,7 @@ fun <T> CoroutineScope.oneWayRouter(
     }
 }
 
-internal fun <T, W> getProcessorsFromContext(applicationContext: ApplicationContext): Collection<Processor<T, W>> {
+internal fun <T : Any, W : Any> getProcessorsFromContext(applicationContext: ApplicationContext): Collection<Processor<T, W>> {
     val processors = mutableListOf<Processor<T, W>>()
     applicationContext.getBeansWithAnnotation(BotCommand::class.java).forEach {
         processors += it.value as Processor<T, W>
