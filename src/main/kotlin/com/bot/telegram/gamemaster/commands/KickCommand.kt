@@ -19,7 +19,6 @@ class KickCommand(private val telegramAPI: ITelegramAPI) : Processor<Update, Str
         if (obj.message != null) {
             return obj.message.text?.startsWith(KICK_COMMAND) == true
                     && (obj.message.replyToMessage?.from?.id != obj.message.from?.id
-                    && obj.message.replyToMessage?.from?.id != telegramAPI.getMe()?.id
                     && compatibleTypes.any { types -> obj.message.chat.type == types.value }
                     && obj.message.replyToMessage?.from?.id != obj.message.from?.id
                     )
@@ -30,10 +29,16 @@ class KickCommand(private val telegramAPI: ITelegramAPI) : Processor<Update, Str
     override fun process(obj: Update): String {
         if (obj.message != null) {
             val msg = obj.message;
+            var textToSend = "";
             if (msg.replyToMessage?.from != null) {
-                val textToSend = "User ${msg.replyToMessage.from.firstName} kicked"
-                telegramAPI.kickChatMember(BotDataResponse(msg.chat.id, msg.replyToMessage.from.id));
-                telegramAPI.sendMessage(BotMessage(msg.chat.id, textToSend))
+                if (msg.replyToMessage.from.id == telegramAPI.botId.id) {
+                    textToSend = "User ${msg.replyToMessage.from.firstName} nice try"
+                    telegramAPI.sendMessage(BotMessage(msg.chat.id, textToSend))
+                } else {
+                    textToSend = "User ${msg.replyToMessage.from.firstName} kicked"
+                    telegramAPI.kickChatMember(BotDataResponse(msg.chat.id, msg.replyToMessage.from.id));
+                    telegramAPI.sendMessage(BotMessage(msg.chat.id, textToSend))
+                }
                 return textToSend
             }
         }

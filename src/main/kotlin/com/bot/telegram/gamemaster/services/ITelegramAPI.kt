@@ -10,5 +10,7 @@ enum class CHATTYPE(val value: String) {
 }
 
 interface ITelegramAPI {
+    val botId: User
     fun sendMessage(message: BotMessage): Any?
     fun kickChatMember(message: BotDataResponse): Any?
+}
