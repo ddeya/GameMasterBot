@@ -16,7 +16,7 @@ class TestConfig(val applicationContext: ApplicationContext) : SpringCoroutineSc
 
     @Primary
     @Bean
-    fun fakeTelegramApi(): ITelegramAPI = FakeTelegramApi()
+    fun fakeTelegramApi(): ITelegramAPI = FakeTelegramApi(API_ENDPOINT, TOKEN)
 
     @Primary
     @Bean(destroyMethod = "destroy")

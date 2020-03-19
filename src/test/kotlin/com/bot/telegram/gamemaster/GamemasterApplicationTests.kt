@@ -5,9 +5,13 @@ import com.bot.telegram.gamemaster.messages.Chat
 import com.bot.telegram.gamemaster.messages.Message
 import com.bot.telegram.gamemaster.messages.Update
 import com.bot.telegram.gamemaster.messages.User
+import com.bot.telegram.gamemaster.services.CHATTYPE
+import com.bot.telegram.gamemaster.services.TelegramAPI
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.EnumSource
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
@@ -19,11 +23,15 @@ class GamemasterApplicationTests {
     @Autowired
     lateinit var router: Router<Update, Any>
 
-    @Test
-    fun testKickCommand() = runBlocking {
+    @Autowired
+    lateinit var telegramAPI: TelegramAPI
+
+    @ParameterizedTest
+    @EnumSource(CHATTYPE::class)
+    fun `Kick On Different Chat Types`(chatType: CHATTYPE): Unit = runBlocking {
         val userA = User(id = 1, username = "A")
         val userB = User(id = 2, username = "B")
-        val msj = Update(
+        val msg = Update(
             updateId = 0,
             message = Message(
                 messageId = 0,
@@ -34,18 +42,68 @@ class GamemasterApplicationTests {
                     chat = Chat(
                         id = 0,
                         bot = false,
-                        type = "group"
+                        type = chatType.toString()
                     )
                 ),
                 chat = Chat(
                     id = 0,
                     bot = false,
-                    type = "group"
+                    type = chatType.toString()
                 ),
                 text = "/kick"
             )
         )
-        router.send(msj)
+        router.send(msg)
         Assertions.assertEquals("User ${userB.firstName} kicked", router.getOutputChannel()?.receive())
+    }
+
+    @Test
+    fun `Kick Without Reply`(): Unit = runBlocking {
+        val userA = User(id = 1, username = "A")
+        val msg = Update(
+            updateId = 0,
+            message = Message(
+                messageId = 0,
+                from = userA,
+                chat = Chat(
+                    id = 0,
+                    bot = false,
+                    type = CHATTYPE.GROUP.toString()
+                ),
+                text = "/kick"
+            )
+        )
+        router.send(msg)
+        Assertions.assertTrue((router.getOutputChannel()?.receive() as String).isEmpty())
+    }
+
+    @Test
+    fun `Kick Own Bot`(): Unit = runBlocking {
+        val userA = User(id = 1, username = "A")
+        val userB = telegramAPI.botUser
+        val msg = Update(
+            updateId = 0,
+            message = Message(
+                messageId = 0,
+                from = userA,
+                replyToMessage = Message(
+                    messageId = 1,
+                    from = userB,
+                    chat = Chat(
+                        id = 0,
+                        bot = false,
+                        type = CHATTYPE.GROUP.toString()
+                    )
+                ),
+                chat = Chat(
+                    id = 0,
+                    bot = false,
+                    type = CHATTYPE.GROUP.toString()
+                ),
+                text = "/kick"
+            )
+        )
+        router.send(msg)
+        Assertions.assertEquals("User @${userA.username}, nice try", router.getOutputChannel()?.receive())
     }
 }

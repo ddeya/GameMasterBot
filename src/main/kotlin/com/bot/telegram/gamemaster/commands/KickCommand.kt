@@ -10,7 +10,7 @@ import com.bot.telegram.gamemaster.services.CHATTYPE
 import com.bot.telegram.gamemaster.services.ITelegramAPI
 
 const val KICK_COMMAND = "/kick"
-val compatibleTypes = arrayOf(CHATTYPE.GROUP, CHATTYPE.SUPERGROUP)
+val compatibleTypes = arrayOf(CHATTYPE.GROUP.toString(), CHATTYPE.SUPERGROUP.toString())
 
 @BotCommand
 class KickCommand(private val telegramAPI: ITelegramAPI) : Processor<Update, String>() {
@@ -18,8 +18,8 @@ class KickCommand(private val telegramAPI: ITelegramAPI) : Processor<Update, Str
     override fun accept(obj: Update): Boolean {
         if (obj.message != null) {
             return obj.message.text?.startsWith(KICK_COMMAND) == true
-                    && (obj.message.replyToMessage?.from?.id != obj.message.from?.id
-                    && compatibleTypes.any { types -> obj.message.chat.type == types.value })
+                    && obj.message.replyToMessage?.from?.id != obj.message.from?.id
+                    && compatibleTypes.any { types -> obj.message.chat.type == types }
         }
         return false;
     }
@@ -27,14 +27,20 @@ class KickCommand(private val telegramAPI: ITelegramAPI) : Processor<Update, Str
     override fun process(obj: Update): String {
         if (obj.message != null) {
             val msg = obj.message;
+            val textToSend: String
             if (msg.replyToMessage?.from != null) {
-                val textToSend = "User ${msg.replyToMessage.from.firstName} kicked"
-                telegramAPI.kickChatMember(BotDataResponse(msg.chat.id, msg.replyToMessage.from.id));
-                telegramAPI.sendMessage(BotMessage(msg.chat.id, textToSend))
+                if (msg.replyToMessage.from.id == telegramAPI.botUser.id) {
+                    textToSend = "User @${msg.from?.username}, nice try"
+                    telegramAPI.sendMessage(BotMessage(msg.chat.id, textToSend))
+                } else {
+                    textToSend = "User ${msg.replyToMessage.from.firstName} kicked"
+                    telegramAPI.kickChatMember(BotDataResponse(msg.chat.id, msg.replyToMessage.from.id));
+                    telegramAPI.sendMessage(BotMessage(msg.chat.id, textToSend))
+                }
                 return textToSend
             }
         }
-        return "No message"
+        return ""
     }
 
     override fun priority(): Int = 1
