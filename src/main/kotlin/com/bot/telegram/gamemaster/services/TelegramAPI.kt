@@ -13,7 +13,7 @@ import java.util.logging.Logger
 open class TelegramAPI(private val apiUrl: String, private val authToken: String) : ITelegramAPI {
     private val httpClient: RestTemplate = RestTemplate()
     val logger: Logger = Logger.getLogger("[TelegramAPI]")
-    override val botId: User by lazy {
+    override val botUser: User by lazy {
         httpClient.getForObject<GetMeResponse>("$apiUrl$authToken/getMe").result
     }
 

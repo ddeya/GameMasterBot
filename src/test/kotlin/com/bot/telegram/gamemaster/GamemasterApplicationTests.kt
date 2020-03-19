@@ -10,6 +10,8 @@ import com.bot.telegram.gamemaster.services.TelegramAPI
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.EnumSource
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
@@ -24,8 +26,9 @@ class GamemasterApplicationTests {
     @Autowired
     lateinit var telegramAPI: TelegramAPI
 
-    @Test
-    fun `Kick On Group`(): Unit = runBlocking {
+    @ParameterizedTest
+    @EnumSource(CHATTYPE::class)
+    fun `Kick On Different Chat Types`(chatType: CHATTYPE): Unit = runBlocking {
         val userA = User(id = 1, username = "A")
         val userB = User(id = 2, username = "B")
         val msg = Update(
@@ -39,43 +42,13 @@ class GamemasterApplicationTests {
                     chat = Chat(
                         id = 0,
                         bot = false,
-                        type = CHATTYPE.GROUP.value
+                        type = chatType.toString()
                     )
                 ),
                 chat = Chat(
                     id = 0,
                     bot = false,
-                    type = CHATTYPE.GROUP.value
-                ),
-                text = "/kick"
-            )
-        )
-        router.send(msg)
-        Assertions.assertEquals("User ${userB.firstName} kicked", router.getOutputChannel()?.receive())
-    }
-
-    @Test
-    fun `Kick On Supergroup`(): Unit = runBlocking {
-        val userA = User(id = 1, username = "A")
-        val userB = User(id = 2, username = "B")
-        val msg = Update(
-            updateId = 0,
-            message = Message(
-                messageId = 0,
-                from = userA,
-                replyToMessage = Message(
-                    messageId = 1,
-                    from = userB,
-                    chat = Chat(
-                        id = 0,
-                        bot = false,
-                        type = CHATTYPE.SUPERGROUP.value
-                    )
-                ),
-                chat = Chat(
-                    id = 0,
-                    bot = false,
-                    type = CHATTYPE.SUPERGROUP.value
+                    type = chatType.toString()
                 ),
                 text = "/kick"
             )
@@ -95,7 +68,7 @@ class GamemasterApplicationTests {
                 chat = Chat(
                     id = 0,
                     bot = false,
-                    type = CHATTYPE.GROUP.value
+                    type = CHATTYPE.GROUP.toString()
                 ),
                 text = "/kick"
             )
@@ -105,9 +78,9 @@ class GamemasterApplicationTests {
     }
 
     @Test
-    fun `Unable to Kick Own Bot`(): Unit = runBlocking {
+    fun `Kick Own Bot`(): Unit = runBlocking {
         val userA = User(id = 1, username = "A")
-        val userB = telegramAPI.botId
+        val userB = telegramAPI.botUser
         val msg = Update(
             updateId = 0,
             message = Message(
@@ -119,13 +92,13 @@ class GamemasterApplicationTests {
                     chat = Chat(
                         id = 0,
                         bot = false,
-                        type = CHATTYPE.GROUP.value
+                        type = CHATTYPE.GROUP.toString()
                     )
                 ),
                 chat = Chat(
                     id = 0,
                     bot = false,
-                    type = CHATTYPE.GROUP.value
+                    type = CHATTYPE.GROUP.toString()
                 ),
                 text = "/kick"
             )
