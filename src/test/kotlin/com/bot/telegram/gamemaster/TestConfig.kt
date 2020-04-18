@@ -1,18 +1,19 @@
 package com.bot.telegram.gamemaster
 
-import com.bot.telegram.gamemaster.core.Router
+import com.bot.telegram.gamemaster.core.Bot
+import com.bot.telegram.gamemaster.core.Processor
 import com.bot.telegram.gamemaster.core.SpringCoroutineScope
-import com.bot.telegram.gamemaster.core.twoWayRouter
+import com.bot.telegram.gamemaster.core.eventBasedBot
 import com.bot.telegram.gamemaster.messages.Update
 import com.bot.telegram.gamemaster.mock.FakeTelegramApi
 import com.bot.telegram.gamemaster.services.ITelegramAPI
-import org.springframework.context.ApplicationContext
+import kotlinx.coroutines.channels.Channel
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Primary
 
 @Configuration
-class TestConfig(val applicationContext: ApplicationContext) : SpringCoroutineScope() {
+class TestConfig() : SpringCoroutineScope() {
 
     @Primary
     @Bean
@@ -20,5 +21,7 @@ class TestConfig(val applicationContext: ApplicationContext) : SpringCoroutineSc
 
     @Primary
     @Bean(destroyMethod = "destroy")
-    fun testRouter(): Router<Update, Any> = twoWayRouter(applicationContext, start = true)
+    fun testRouter(processor: Processor<Update, Any>): Bot<Update, Any> = eventBasedBot(
+        processor, outputChannel = Channel(Channel.BUFFERED), start = true
+    )
 }

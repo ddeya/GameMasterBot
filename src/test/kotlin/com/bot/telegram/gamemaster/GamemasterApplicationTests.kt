@@ -1,6 +1,6 @@
 package com.bot.telegram.gamemaster
 
-import com.bot.telegram.gamemaster.core.Router
+import com.bot.telegram.gamemaster.core.Bot
 import com.bot.telegram.gamemaster.messages.Chat
 import com.bot.telegram.gamemaster.messages.Message
 import com.bot.telegram.gamemaster.messages.Update
@@ -21,7 +21,7 @@ import org.springframework.test.context.ActiveProfiles
 class GamemasterApplicationTests {
 
     @Autowired
-    lateinit var router: Router<Update, Any>
+    lateinit var bot: Bot<Update, Any>
 
     @Autowired
     lateinit var telegramAPI: TelegramAPI
@@ -53,8 +53,8 @@ class GamemasterApplicationTests {
                 text = "/kick"
             )
         )
-        router.send(msg)
-        Assertions.assertEquals("User ${userB.firstName} kicked", router.getOutputChannel()?.receive())
+        bot.send(msg)
+        Assertions.assertEquals("User ${userB.firstName} kicked", bot.getOutputChannel()?.receive())
     }
 
     @Test
@@ -73,8 +73,8 @@ class GamemasterApplicationTests {
                 text = "/kick"
             )
         )
-        router.send(msg)
-        Assertions.assertTrue((router.getOutputChannel()?.receive() as String).isEmpty())
+        bot.send(msg)
+        Assertions.assertTrue((bot.getOutputChannel()?.receive() as String).isEmpty())
     }
 
     @Test
@@ -103,7 +103,7 @@ class GamemasterApplicationTests {
                 text = "/kick"
             )
         )
-        router.send(msg)
-        Assertions.assertEquals("User @${userA.username}, nice try", router.getOutputChannel()?.receive())
+        bot.send(msg)
+        Assertions.assertEquals("User @${userA.username}, nice try", bot.getOutputChannel()?.receive())
     }
 }
