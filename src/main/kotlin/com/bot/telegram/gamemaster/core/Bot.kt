@@ -37,8 +37,10 @@ open class EventBasedBot<T : Any, W : Any>(
                 channels[key] = actor {
                     for (msg in channel) {
                         logger.info("IsolationThread-$key received message $msg")
-                        val result = processor.process(msg)
-                        outputChannel?.send(result)
+                        try {
+                            val result = processor.process(msg)
+                            outputChannel?.send(result)
+                        }catch(_:Exception){}
                     }
                 }
             }
