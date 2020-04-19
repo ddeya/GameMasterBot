@@ -3,6 +3,7 @@ package com.bot.telegram.gamemaster
 import com.bot.telegram.gamemaster.commands.DefaultCommand
 import com.bot.telegram.gamemaster.commands.EchoCommand
 import com.bot.telegram.gamemaster.commands.KickCommand
+import com.bot.telegram.gamemaster.commands.MuteCommand
 import com.bot.telegram.gamemaster.core.*
 import com.bot.telegram.gamemaster.messages.Update
 import com.bot.telegram.gamemaster.services.ITelegramAPI
@@ -24,6 +25,7 @@ class GameMasterApplication : SpringCoroutineScope() {
     fun mainProcessor(api: ITelegramAPI): Processor<Update, Any> = select {
         +EchoCommand(api)
         +KickCommand(api)
+        +MuteCommand(api)
         +DefaultCommand(api)
     }
 

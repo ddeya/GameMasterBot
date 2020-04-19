@@ -26,32 +26,34 @@ class GamemasterApplicationTests {
     @Autowired
     lateinit var telegramAPI: TelegramAPI
 
+    //############ Starts Kick Test ######################
+
     @ParameterizedTest
     @EnumSource(CHATTYPE::class)
     fun `Kick On Different Chat Types`(chatType: CHATTYPE): Unit = runBlocking {
         val userA = User(id = 1, username = "A")
         val userB = User(id = 2, username = "B")
         val msg = Update(
-            updateId = 0,
-            message = Message(
-                messageId = 0,
-                from = userA,
-                replyToMessage = Message(
-                    messageId = 1,
-                    from = userB,
-                    chat = Chat(
-                        id = 0,
-                        bot = false,
-                        type = chatType.toString()
-                    )
-                ),
-                chat = Chat(
-                    id = 0,
-                    bot = false,
-                    type = chatType.toString()
-                ),
-                text = "/kick"
-            )
+                updateId = 0,
+                message = Message(
+                        messageId = 0,
+                        from = userA,
+                        replyToMessage = Message(
+                                messageId = 1,
+                                from = userB,
+                                chat = Chat(
+                                        id = 0,
+                                        bot = false,
+                                        type = chatType.toString()
+                                )
+                        ),
+                        chat = Chat(
+                                id = 0,
+                                bot = false,
+                                type = chatType.toString()
+                        ),
+                        text = "/kick"
+                )
         )
         bot.send(msg)
         Assertions.assertEquals("User ${userB.firstName} kicked", bot.getOutputChannel()?.receive())
@@ -61,17 +63,17 @@ class GamemasterApplicationTests {
     fun `Kick Without Reply`(): Unit = runBlocking {
         val userA = User(id = 1, username = "A")
         val msg = Update(
-            updateId = 0,
-            message = Message(
-                messageId = 0,
-                from = userA,
-                chat = Chat(
-                    id = 0,
-                    bot = false,
-                    type = CHATTYPE.GROUP.toString()
-                ),
-                text = "/kick"
-            )
+                updateId = 0,
+                message = Message(
+                        messageId = 0,
+                        from = userA,
+                        chat = Chat(
+                                id = 0,
+                                bot = false,
+                                type = CHATTYPE.GROUP.toString()
+                        ),
+                        text = "/kick"
+                )
         )
         bot.send(msg)
         Assertions.assertTrue((bot.getOutputChannel()?.receive() as String).isEmpty())
@@ -82,28 +84,99 @@ class GamemasterApplicationTests {
         val userA = User(id = 1, username = "A")
         val userB = telegramAPI.botUser
         val msg = Update(
-            updateId = 0,
-            message = Message(
-                messageId = 0,
-                from = userA,
-                replyToMessage = Message(
-                    messageId = 1,
-                    from = userB,
-                    chat = Chat(
-                        id = 0,
-                        bot = false,
-                        type = CHATTYPE.GROUP.toString()
-                    )
-                ),
-                chat = Chat(
-                    id = 0,
-                    bot = false,
-                    type = CHATTYPE.GROUP.toString()
-                ),
-                text = "/kick"
-            )
+                updateId = 0,
+                message = Message(
+                        messageId = 0,
+                        from = userA,
+                        replyToMessage = Message(
+                                messageId = 1,
+                                from = userB,
+                                chat = Chat(
+                                        id = 0,
+                                        bot = false,
+                                        type = CHATTYPE.GROUP.toString()
+                                )
+                        ),
+                        chat = Chat(
+                                id = 0,
+                                bot = false,
+                                type = CHATTYPE.GROUP.toString()
+                        ),
+                        text = "/kick"
+                )
         )
         bot.send(msg)
         Assertions.assertEquals("User @${userA.username}, nice try", bot.getOutputChannel()?.receive())
     }
+
+    //############ starts Mute Test ######################
+
+    @Test
+    fun `Mute On SUPERGROUP Chat Types`(): Unit = runBlocking {
+        val userA = User(id = 1, username = "A")
+        val userB = User(id = 2, username = "B")
+        val msg = Update(
+                updateId = 0,
+                message = Message(
+                        messageId = 0,
+                        from = userA,
+                        replyToMessage = Message(messageId = 1, from = userB, chat = Chat(id = 0, bot = false, type = CHATTYPE.SUPERGROUP.toString())),
+                        chat = Chat(id = 0, bot = false, type = CHATTYPE.SUPERGROUP.toString()),
+                        text = "/mute"
+                )
+        )
+        bot.send(msg)
+        Assertions.assertEquals("User ${userB.firstName} silence 🤫 ", bot.getOutputChannel()?.receive())
+    }
+
+    @Test
+    fun `Mute Without Reply`(): Unit = runBlocking {
+        val userA = User(id = 1, username = "A")
+        val msg = Update(
+                updateId = 0,
+                message = Message(
+                        messageId = 0,
+                        from = userA,
+                        chat = Chat(
+                                id = 0,
+                                bot = false,
+                                type = CHATTYPE.GROUP.toString()
+                        ),
+                        text = "/mute"
+                )
+        )
+        bot.send(msg)
+        Assertions.assertTrue((bot.getOutputChannel()?.receive() as String).isEmpty())
+    }
+
+    @Test
+    fun `Mute Own Bot`(): Unit = runBlocking {
+        val userA = User(id = 1, username = "A")
+        val userB = telegramAPI.botUser
+        val msg = Update(
+                updateId = 0,
+                message = Message(
+                        messageId = 0,
+                        from = userA,
+                        replyToMessage = Message(
+                                messageId = 1,
+                                from = userB,
+                                chat = Chat(
+                                        id = 0,
+                                        bot = false,
+                                        type = CHATTYPE.GROUP.toString()
+                                )
+                        ),
+                        chat = Chat(
+                                id = 0,
+                                bot = false,
+                                type = CHATTYPE.GROUP.toString()
+                        ),
+                        text = "/mute"
+                )
+        )
+        bot.send(msg)
+        Assertions.assertEquals("User @${userA.username},really? You can do that", bot.getOutputChannel()?.receive())
+    }
+
 }

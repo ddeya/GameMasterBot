@@ -1,9 +1,6 @@
 package com.bot.telegram.gamemaster.services
 
-import com.bot.telegram.gamemaster.messages.BotDataResponse
-import com.bot.telegram.gamemaster.messages.BotMessage
-import com.bot.telegram.gamemaster.messages.GetMeResponse
-import com.bot.telegram.gamemaster.messages.User
+import com.bot.telegram.gamemaster.messages.*
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.client.getForObject
 import org.springframework.web.client.postForObject
@@ -28,6 +25,12 @@ open class TelegramAPI(private val apiUrl: String, private val authToken: String
     override fun kickChatMember(message: BotDataResponse): Any? {
         return logRequest(message) { data ->
             httpClient.postForObject("$apiUrl$authToken/kickChatMember", data)
+        }
+    }
+
+    override fun muteChatMember(message: BotDataResponse): Any? {
+        return logRequest(message) { data ->
+            httpClient.postForObject("$apiUrl$authToken/restrictChatMember", data)
         }
     }
 
