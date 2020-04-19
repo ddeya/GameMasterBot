@@ -12,4 +12,7 @@ class FakeTelegramApi(apiUrl: String, authToken: String) : TelegramAPI(apiUrl, a
     override fun kickChatMember(message: BotDataResponse): Any? {
         return message
     }
+    override fun muteChatMember(message: BotDataResponse): Any? {
+        return message
+    }
 }

@@ -7,6 +7,8 @@ data class BotDataResponse(
         val chatId: Long,
         @JsonProperty("user_id")
         val userId: Int,
+//        To avoid t create new structures
+        val permissions: ChatPermissions? = null,
         @JsonProperty("until_date")
         val untilDate: Int? = null
 )
